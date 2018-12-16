@@ -4,19 +4,14 @@ import datetime
 import time
 import os
 
+import config as  config
 from azure.eventhub import EventHubClient, Sender, EventData
 
 logger = logging.getLogger("azure")
 
-# Address can be in either of these formats:
-# "amqps://<URL-encoded-SAS-policy>:<URL-encoded-SAS-key>@<mynamespace>.servicebus.windows.net/myeventhub"
-# "amqps://<mynamespace>.servicebus.windows.net/myeventhub"
-# For example:
-ADDRESS = "amqps://<namespace>.servicebus.windows.net/hubName"
-
-# SAS policy and key are not required if they are encoded in the URL
-USER = "MyPolicy"
-KEY = "my policy key"
+ADDRESS = config.eventHubPolicy['Url']
+USER = config.eventHubPolicy['User']
+KEY = config.eventHubPolicy['Key']
 
 try:
     if not ADDRESS:
