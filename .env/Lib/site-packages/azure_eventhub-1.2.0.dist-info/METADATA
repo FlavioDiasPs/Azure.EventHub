@@ -1,0 +1,221 @@
+Metadata-Version: 2.1
+Name: azure-eventhub
+Version: 1.2.0
+Summary: Microsoft Azure Event Hubs Client Library for Python
+Home-page: https://github.com/Azure/azure-event-hubs-python
+Author: Microsoft Corporation
+Author-email: azpysdkhelp@microsoft.com
+License: MIT License
+Platform: UNKNOWN
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Programming Language :: Python :: 3.7
+Classifier: License :: OSI Approved :: MIT License
+Requires-Dist: uamqp (<2.0.0,>=1.1.0)
+Requires-Dist: msrestazure (<2.0.0,>=0.4.32)
+Requires-Dist: azure-common (~=1.1)
+Requires-Dist: azure-storage-blob (~=1.3)
+
+Microsoft Azure SDK for Event Hubs
+==================================
+
+.. image:: https://img.shields.io/pypi/v/azure-eventhub.svg
+    :target: https://pypi.python.org/pypi/azure-eventhub/
+
+.. image:: https://img.shields.io/pypi/pyversions/azure-eventhub.svg
+    :target: https://pypi.python.org/pypi/azure-eventhub/
+
+.. image:: https://travis-ci.org/Azure/azure-event-hubs-python.svg?branch=master
+    :target: https://travis-ci.org/Azure/azure-event-hubs-python
+
+
+A Python AMQP client for Azure Event Hubs the provides:
+
+- A sender to publish events to the Event Hubs service.
+- A receiver to read events from the Event Hubs service.
+
+On Python 3.5 and above, it also includes:
+
+- An async sender and receiver that supports async/await methods.
+- An Event Processor Host module that manages the distribution of partition readers.
+
+
+Installation
+============
+
+Wheels are provided for all major operating systems, so you can install directly with pip:
+
+.. code:: shell
+
+    $ pip install azure-eventhub
+
+
+Documentation
++++++++++++++
+Reference documentation is available at `docs.microsoft.com/python/api/azure-eventhub <https://docs.microsoft.com/python/api/azure-eventhub>`__.
+
+
+Examples
++++++++++
+
+- ./examples/send.py - use sender to publish events
+- ./examples/recv.py - use receiver to read events
+- ./examples/send_async.py - async/await support of a sender
+- ./examples/recv_async.py - async/await support of a receiver
+- ./examples/eph.py - event processor host
+
+
+Logging
+++++++++
+
+- enable 'azure.eventhub' logger to collect traces from the library
+- enable 'uamqp' logger to collect traces from the underlying uAMQP library
+- enable AMQP frame level trace by setting `debug=True` when creating the Client
+
+
+Provide Feedback
+================
+
+If you encounter any bugs or have suggestions, please file an issue in the
+`Issues <https://github.com/Azure/azure-uamqp-python/issues>`__
+section of the project.
+
+
+Contributing
+============
+
+This project welcomes contributions and suggestions.  Most contributions require you to agree to a
+Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
+the rights to use your contribution. For details, visit `https://cla.microsoft.com <https://cla.microsoft.com>`__.
+
+When you submit a pull request, a CLA-bot will automatically determine whether you need to provide
+a CLA and decorate the PR appropriately (e.g., label, comment). Simply follow the instructions
+provided by the bot. You will only need to do this once across all repos using our CLA.
+
+This project has adopted the `Microsoft Open Source Code of Conduct <https://opensource.microsoft.com/codeofconduct/>`__.
+For more information see the `Code of Conduct FAQ <https://opensource.microsoft.com/codeofconduct/faq/>`__ or
+contact `opencode@microsoft.com <mailto:opencode@microsoft.com>`__ with any additional questions or comments.
+
+
+.. :changelog:
+
+Release History
+===============
+
+1.2.0
++++++
+
+- Support for Python 2.7 in azure.eventhub module (azure.eventprocessorhost will not support Python 2.7).
+- Parse EventData.enqueued_time as a UTC timestamp (issue #72, thanks @vjrantal)
+
+
+1.1.1 (2019-10-03)
+++++++++++++++++++
+
+- Fixed bug in Azure namespace package.
+
+
+1.1.0 (2018-09-21)
+++++++++++++++++++
+
+- Changes to `AzureStorageCheckpointLeaseManager` parameters to support other connection options (issue #61):
+
+  - The `storage_account_name`, `storage_account_key` and `lease_container_name` arguments are now optional keyword arguments.
+  - Added a `sas_token` argument that must be specified with `storage_account_name` in place of `storage_account_key`.
+  - Added an `endpoint_suffix` argument to support storage endpoints in National Clouds.
+  - Added a `connection_string` argument that, if specified, overrides all other endpoint arguments.
+  - The `lease_container_name` argument now defaults to `"eph-leases"` if not specified.
+
+- Fix for clients failing to start if run called multipled times (issue #64).
+- Added convenience methods `body_as_str` and `body_as_json` to EventData object for easier processing of message data.
+
+
+1.0.0 (2018-08-22)
+++++++++++++++++++
+
+- API stable.
+- Renamed internal `_async` module to `async_ops` for docs generation.
+- Added optional `auth_timeout` parameter to `EventHubClient` and `EventHubClientAsync` to configure how long to allow for token
+  negotiation to complete. Default is 60 seconds.
+- Added optional `send_timeout` parameter to `EventHubClient.add_sender` and `EventHubClientAsync.add_async_sender` to determine the
+  timeout for Events to be successfully sent. Default value is 60 seconds.
+- Reformatted logging for performance.
+
+
+0.2.0 (2018-08-06)
+++++++++++++++++++
+
+- Stability improvements for EPH.
+- Updated uAMQP version.
+- Added new configuration options for Sender and Receiver; `keep_alive` and `auto_reconnect`.
+  These flags have been added to the following:
+
+  - `EventHubClient.add_receiver`
+  - `EventHubClient.add_sender`
+  - `EventHubClientAsync.add_async_receiver`
+  - `EventHubClientAsync.add_async_sender`
+  - `EPHOptions.keey_alive_interval`
+  - `EPHOptions.auto_reconnect_on_error`
+
+
+0.2.0rc2 (2018-07-29)
++++++++++++++++++++++
+
+- **Breaking change** `EventData.offset` will now return an object of type `~uamqp.common.Offset` rather than str.
+  The original string value can be retrieved from `~uamqp.common.Offset.value`.
+- Each sender/receiver will now run in its own independent connection.
+- Updated uAMQP dependency to 0.2.0
+- Fixed issue with IoTHub clients not being able to retrieve partition information.
+- Added support for HTTP proxy settings to both EventHubClient and EPH.
+- Added error handling policy to automatically reconnect on retryable error.
+- Added keep-alive thread for maintaining an unused connection.
+
+
+0.2.0rc1 (2018-07-06)
++++++++++++++++++++++
+
+- **Breaking change** Restructured library to support Python 3.7. Submodule `async` has been renamed and all classes from
+  this module can now be imported from azure.eventhub directly.
+- **Breaking change** Removed optional `callback` argument from `Receiver.receive` and `AsyncReceiver.receive`.
+- **Breaking change** `EventData.properties` has been renamed to `EventData.application_properties`.
+  This removes the potential for messages to be processed via callback for not yet returned
+  in the batch.
+- Updated uAMQP dependency to v0.1.0
+- Added support for constructing IoTHub connections.
+- Fixed memory leak in receive operations.
+- Dropped Python 2.7 wheel support.
+
+
+0.2.0b2 (2018-05-29)
+++++++++++++++++++++
+
+- Added `namespace_suffix` to EventHubConfig() to support national clouds.
+- Added `device_id` attribute to EventData to support IoT Hub use cases.
+- Added message header to workaround service bug for PartitionKey support.
+- Updated uAMQP dependency to vRC1.
+
+
+0.2.0b1 (2018-04-20)
+++++++++++++++++++++
+
+- Updated uAMQP to latest version.
+- Further testing and minor bug fixes.
+
+
+0.2.0a2 (2018-04-02)
+++++++++++++++++++++
+
+- Updated uAQMP dependency.
+
+
+0.2.0a1 (unreleased)
+++++++++++++++++++++
+
+- Swapped out Proton dependency for uAMQP.
+
