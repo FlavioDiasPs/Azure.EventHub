@@ -3,7 +3,7 @@ import sys
 import logging
 import time
 
-import config
+import config as config
 from azure.eventhub import EventHubClient, Receiver, Offset
 
 logger = logging.getLogger("azure")
@@ -23,7 +23,7 @@ last_offset = "-1"
 
 client = EventHubClient(ADDRESS, debug=False, username=USER, password=KEY)
 try:
-    receiver = client.add_receiver(CONSUMER_GROUP, PARTITION, prefetch=5, offset=OFFSET)
+    receiver = client.add_receiver(CONSUMER_GROUP, PARTITION, prefetch=50, offset=OFFSET)
     client.run()
     start_time = time.time()
     for event_data in receiver.receive(timeout=100):
