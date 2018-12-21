@@ -8,9 +8,12 @@ from azure.eventhub import EventHubClient, Receiver, Offset
 
 logger = logging.getLogger("azure")
 
-# ADDRESS = config.eventHubPolicy['Url']
-# USER = config.eventHubPolicy['User']
-# KEY = config.eventHubPolicy['Key']
+ADDRESS = ''
+# config.eventHubPolicy['Url']
+USER = ''
+# config.eventHubPolicy['User']
+KEY = ''
+# econfig.eventHubPolicy['Key']
 
 # The hell is it?
 CONSUMER_GROUP = "$default"
