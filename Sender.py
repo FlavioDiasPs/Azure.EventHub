@@ -3,15 +3,21 @@ import logging
 import datetime
 import time
 import os
+import random as rand
 
-import config as  config
+# import config as  config
 from azure.eventhub import EventHubClient, Sender, EventData
 
 logger = logging.getLogger("azure")
 
-ADDRESS = config.eventHubPolicy['Url']
-USER = config.eventHubPolicy['User']
-KEY = config.eventHubPolicy['Key']
+ADDRESS = 'amqps://de-eh-test.servicebus.windows.net/de-ingestion-hub'
+USER = 'SenderPolicy'
+KEY = 'D4JZNSFXPj0QLKSzdhef5NhmuxZKEtTVeIioAIUYfHI='
+
+# Endpoint=sb://de-eh-test.servicebus.windows.net/;
+# SharedAccessKeyName=SenderPolicy;
+# SharedAccessKey=D4JZNSFXPj0QLKSzdhef5NhmuxZKEtTVeIioAIUYfHI=;
+# EntityPath=de-ingestion-hub
 
 try:
     if not ADDRESS:
@@ -19,13 +25,21 @@ try:
 
     # Create Event Hubs client
     client = EventHubClient(ADDRESS, debug=False, username=USER, password=KEY)
+    
     sender = client.add_sender(partition="0")
     client.run()
     try:
         start_time = time.time()
-        for i in range(10):
-            print("Sending message: {}".format(i))
-            sender.send(EventData(str(i)))
+
+        message = '12\n'
+        for i in range(3):
+            message += f"'{str(rand.randint(0, 9000))}',"
+            message += f"'{str(rand.randint(0, 9000))}',"
+            message += f"'{str(rand.randint(0, 9000))}',"                     
+            message += f"'{str(rand.randint(0, 9000))}'\n"
+            
+        print("Sending message: \n{}".format(message))        
+        sender.send(EventData(message))
     except:
         raise
     finally:
